@@ -1,0 +1,14 @@
+{
+  "fileName": "test.txt",
+  "fileSize": 19,
+  "chunkSize": 1048576,
+  "chunks": [
+    {
+      "Index": 0,
+      "Hash": "23bddb0fe6aa16c60afe762e033866e03474427be861e015753f3f70b0fec7fa",
+      "Size": 19,
+      "StartPos": 0
+    }
+  ],
+  "totalChunks": 1
+}
