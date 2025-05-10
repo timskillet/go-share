@@ -83,7 +83,7 @@ func DownloadFile(manifest *file.Manifest, peerAddress string, peerPort int, out
 
 		// Read chunk data
 		chunkData := make([]byte, chunk.Size)
-		if _, err := conn.Read(chunkData); err != nil {
+		if _, err := io.ReadFull(conn, chunkData); err != nil {
 			return fmt.Errorf("failed to read chunk data: %v", err)
 		}
 

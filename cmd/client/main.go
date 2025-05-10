@@ -76,7 +76,7 @@ with the same name as the original file plus a .manifest extension.`,
 			return
 		}
 
-		resp, err := http.Post("http://localhost:8000/announce", "application/json", bytes.NewBuffer(data))
+		resp, err := http.Post("http://localhost:8080/announce", "application/json", bytes.NewBuffer(data))
 		if err != nil {
 			fmt.Printf("Error announcing file: %v\n", err)
 			return
@@ -114,7 +114,7 @@ from available peers and saved in the same directory as the manifest.`,
 		}
 
 		// Get list of peers from tracker
-		resp, err := http.Get(fmt.Sprintf("http://localhost:8000/peers?fileHash=%s", manifest.FileHash))
+		resp, err := http.Get(fmt.Sprintf("http://localhost:8080/peers?fileHash=%s", manifest.FileHash))
 		if err != nil {
 			return fmt.Errorf("error getting peers: %v", err)
 		}
@@ -139,7 +139,11 @@ from available peers and saved in the same directory as the manifest.`,
 		}
 
 		// Download file
-		outputPath := filepath.Join(filepath.Dir(manifestPath), manifest.FileName)
+		downloadsDir := "downloads"
+		if err := os.MkdirAll(downloadsDir, 0755); err != nil {
+			return fmt.Errorf("error creating downloads directory: %v", err)
+		}
+		outputPath := filepath.Join(downloadsDir, manifest.FileName)
 		if err := peer.DownloadFile(manifest, peersResp.Peers[0].Address, peersResp.Peers[0].Port, outputPath); err != nil {
 			return fmt.Errorf("error downloading file: %v", err)
 		}

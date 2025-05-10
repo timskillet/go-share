@@ -62,10 +62,8 @@ func handleConnection(conn net.Conn, filePath string) {
 		return
 	}
 
-	chunk := manifest.Chunks[req.ChunkIndex]
-
 	// Read the chunk data
-	chunkData, err := file.GetChunk(filePath, chunk)
+	chunkData, err := file.GetChunk(filePath, manifest, req.ChunkIndex)
 	if err != nil {
 		fmt.Printf("Error reading chunk: %v\n", err)
 		return

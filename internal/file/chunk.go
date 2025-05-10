@@ -12,7 +12,7 @@ import (
 // GetChunk retrieves a specific chunk from a file.
 // It reads the chunk data from the file and returns it as a byte slice.
 // The chunk is identified by its index in the manifest's chunks array.
-func GetChunk(filePath string, chunk Chunk) ([]byte, error) {
+func GetChunk(filePath string, manifest *Manifest, chunkIndex int) ([]byte, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
 		return nil, err
@@ -21,8 +21,11 @@ func GetChunk(filePath string, chunk Chunk) ([]byte, error) {
 
 	// Calculate the offset for this chunk
 	offset := int64(0)
-	for i := 0; i < len(chunk.Hash); i++ {
-		offset += chunk.Size
+	for i := 0; i < len(manifest.Chunks); i++ {
+		if i == chunkIndex {
+			break
+		}
+		offset += manifest.Chunks[i].Size
 	}
 
 	// Seek to the chunk's position
@@ -31,6 +34,7 @@ func GetChunk(filePath string, chunk Chunk) ([]byte, error) {
 	}
 
 	// Read the chunk data
+	chunk := manifest.Chunks[chunkIndex]
 	data := make([]byte, chunk.Size)
 	if _, err := io.ReadFull(file, data); err != nil {
 		return nil, err
